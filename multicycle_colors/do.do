@@ -15,6 +15,11 @@ add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/register
 add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/register3
 add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/offset
 add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/jump_offset
+add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/branch_control
+add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/beq
+add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/bne
+add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/branch_address
+add wave -group fetch -radix hexadecimal sim:/t_processor/the_processor/zero
 
 add wave -group decode -radix hexadecimal sim:/t_processor/the_processor/alu_operation
 add wave -group decode -radix hexadecimal sim:/t_processor/the_processor/register_a
@@ -62,3 +67,6 @@ configure wave -shortnames 1
 run 500 ns
 
 wave zoom full
+
+WaveRestoreCursors {beq_n_tomado {182483 ps} 1} {bne_n_tomado {210724 ps} 1} {beq_tomado {240414 ps} 1} {bne_tomado {271552 ps} 1}
+

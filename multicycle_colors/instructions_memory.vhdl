@@ -19,20 +19,26 @@ architecture behavioral of instructions_memory is
 
 	type instructions_sequence is array (0 to length) of std_logic_vector (data_width - 1 downto 0);
 	signal instructions: instructions_sequence :=
-		-- lw $t0, 0($0)
+		-- inicio : lw $t0, 0($0)
    (0 => X"8C080000",
-		-- lw $t1, 0($0)
-    1 => X"8C090000",
+		-- lw $t1, 1($0)
+    		1 => X"8C090000",
 		-- lw $t2, 1($0)
 		2 => X"8C0A0001",
-		-- add $t0, $t0, $t1
-		3 => X"01094020",
-		-- sw $t2, 0($t0)
-		4 => X"AD0A0000",
-		-- sw $t0, 0($t0)
-		--4 => X"AD080000",
-		--j 3
-		5 => X"08000003",
+		
+		-- $t1 = $t2 != $t0
+
+		-- beq $t2, $t0,pos1
+		3 => X"11480001",
+		
+		-- bne $t1,$t1, pos1
+		4 => X"15290000",
+		
+		-- pos1: beq $t1,$t1,final
+		5 => X"11290000", 
+		
+		-- final: bne $t2,$t0,inicio
+		6 => X"1548FFF9",
 
 		others => (others => 'U'));
 

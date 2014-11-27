@@ -11,7 +11,7 @@ entity control_unit is
 		enable_alu_output_register: out std_logic := '0';
 		register1, register2, register3: out std_logic_vector (4 downto 0);
 		write_register, mem_to_register: out std_logic;
-		source_alu, reg_dst: out std_logic;
+		source_alu, reg_dst, beq_c, bne_c: out std_logic;
 		alu_operation: out std_logic_vector (2 downto 0);
 		read_memory, write_memory: out std_logic;
 		offset: out std_logic_vector (31 downto 0);
@@ -28,6 +28,8 @@ architecture behavioral of control_unit is
 	constant sw: std_logic_vector (5 downto 0) := "101011";
 	constant  r: std_logic_vector (5 downto 0) := "000000";
 	constant  j: std_logic_vector (5 downto 0) := "000010";
+	constant  beq: std_logic_vector (5 downto 0) := "000100";
+	constant  bne: std_logic_vector (5 downto 0) := "000101";
 
 	function extend_to_32(input: std_logic_vector (15 downto 0)) return std_logic_vector is 
 	variable s: signed (31 downto 0);
@@ -60,6 +62,8 @@ begin
    	mem_to_register <= '0';
 		write_memory <= '0';
 		write_register <= '0';
+		beq_c <= '0';
+		bne_c <= '0';
 
 		case next_state is
 
@@ -84,6 +88,14 @@ begin
 					next_state <= mem;
 				elsif opcode = j then
      			jump_control <= '1';
+				  next_state <= fetch;
+				elsif opcode = beq then
+				  beq_c <= '1';
+				  alu_operation <= "011";
+				  next_state <= fetch;
+				elsif opcode = bne then
+				  bne_c <= '1';
+				  alu_operation <= "011";
 				  next_state <= fetch;
 				else --if opcode = r then
 					next_state <= writeback;
