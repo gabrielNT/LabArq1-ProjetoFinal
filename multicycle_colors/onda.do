@@ -51,9 +51,11 @@ add wave -noupdate -expand -group relatorio9 -radix hexadecimal /t_processor/the
 add wave -noupdate -expand -group relatorio9 -radix hexadecimal /t_processor/the_processor/branch_nq
 add wave -noupdate -expand -group relatorio9 -radix hexadecimal /t_processor/the_processor/z_flag
 add wave -noupdate -expand -group relatorio9 -radix hexadecimal /t_processor/the_processor/branch
+add wave -noupdate -expand -group relatorio10 -radix hexadecimal /t_processor/the_processor/addi_control
+add wave -noupdate -expand -group relatorio10 -radix hexadecimal /t_processor/the_processor/data_to_write_in_register
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{beq pulo 1} {182265 ps} 1} {{bne nao pula 1} {212316 ps} 1} {{bne pula 1} {242833 ps} 1} {{bne nao pula 2} {323125 ps} 1} {{beq nao pula 2} {391789 ps} 1}
-quietly wave cursor active 5
+WaveRestoreCursors {{addi 1} {125000 ps} 1} {{addi 2} {195000 ps} 1} {{beq nao pula} {169697 ps} 1} {{beq pula} {235000 ps} 1}
+quietly wave cursor active 4
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -68,4 +70,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {131250 ps}
+WaveRestoreZoom {0 ps} {525 ns}

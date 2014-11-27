@@ -27,10 +27,6 @@ architecture behavioral of instructions_memory is
     2 => X"21090003",
     --4:  beq $t1, $t0, inicio #posicao zero
     3 => X"1128FFFC",
-    --5:  addi $t0, $t0, 3
-    4 => X"21080003",
-    --6:  beq, $t1, $t0, final #ultima linha
-    5 => X"11280000",
 		
     
 		others => (others => 'U'));

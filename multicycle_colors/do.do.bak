@@ -70,5 +70,3 @@ configure wave -shortnames 1
 run 500 ns
 
 wave zoom full
-
-WaveRestoreCursors {{addi 1} {125000 ps} 1} {{addi 2} {195000 ps} 1} {{beq nao pula} {169697 ps} 1} {{beq pula} {235000 ps} 1}
