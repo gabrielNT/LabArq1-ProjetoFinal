@@ -9,9 +9,9 @@ ENTITY address_video IS
     disp_ena     : IN  STD_LOGIC;
     video_out    : IN  STD_LOGIC_VECTOR(31 DOWNTO 0);
     video_address: OUT STD_LOGIC_VECTOR(11 downto 0);
-		VGA_R 		   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
-		VGA_G 	     : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
-		VGA_B 		   : OUT STD_LOGIC_VECTOR(3 DOWNTO 0));
+    VGA_R 	 : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+    VGA_G 	 : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+    VGA_B 	 : OUT STD_LOGIC_VECTOR(3 DOWNTO 0));
 END address_video;
 
 ARCHITECTURE behavior OF address_video IS
@@ -29,10 +29,13 @@ BEGIN
             + (shift_left(row_div2, 1)) 
             + (shift_right(to_unsigned(column, 12), 6)));  
   
-  pixel <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  -- Criando pixel_r , pixel_g , pixel_b para selecionar as cores 
+  pixel_r <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
+  pixel_b <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
   
-  VGA_R <= (others => pixel) when disp_ena='1' else (others => '0');
-  VGA_G <= (others => pixel) when disp_ena='1' else (others => '0');
-  VGA_B <= (others => not pixel) when disp_ena='1' else (others => '0');
+  VGA_R <= (others => pixel_r) when disp_ena='1' else (others => '0');
+  VGA_G <= (others => pixel_g) when disp_ena='1' else (others => '0');
+  VGA_B <= (others => pixel_b) when disp_ena='1' else (others => '0');
   
 END behavior;
