@@ -32,6 +32,7 @@ architecture behavioral of control_unit is
 	constant  bne: std_logic_vector (5 downto 0) := "000101";
 	constant  beq: std_logic_vector (5 downto 0) := "000100";
 	constant  addi: std_logic_vector (5 downto 0) := "001000";
+	constant ori: std_logic_vector(5 downto 0) := "001101";
 
 	function extend_to_32(input: std_logic_vector (15 downto 0)) return std_logic_vector is 
 	variable s: signed (31 downto 0);
@@ -90,16 +91,20 @@ begin
       		source_alu <= '1';
 					next_state <= mem;
 				elsif opcode = j then
-     			jump_control <= '1';
-				next_state <= fetch;
+     			  jump_control <= '1';
+				  next_state <= fetch;
+				elsif opcode = ori then
+				  source_alu <= '1';
+				  alu_operation <= "001";
+				  next_state <= writeback;
 				elsif opcode = beq then
-				alu_operation <= "011";
-     			branch_eq <= '1';
-				next_state <= fetch;
+				  alu_operation <= "011";
+     			  branch_eq <= '1';
+				  next_state <= fetch;
 				elsif opcode = bne then
-				alu_operation <= "011";
-     			branch_nq <= '1';
-				next_state <= fetch;  
+				  alu_operation <= "011";
+   		   	 branch_nq <= '1';
+				  next_state <= fetch;  
 				elsif opcode = addi then
 				 source_alu <= '1';
 				 addi_control <= '1';
@@ -122,6 +127,8 @@ begin
 				-- write regiter result
         if opcode = lw then
    				mem_to_register <= '1';
+        elsif opcode = ori then
+ 				  reg_dst <= '0';
         else
 				  reg_dst <= '1';
         end if;
@@ -134,4 +141,3 @@ begin
 	end process;
 
 end behavioral;
-
