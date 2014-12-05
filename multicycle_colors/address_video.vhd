@@ -19,6 +19,7 @@ ARCHITECTURE behavior OF address_video IS
 SIGNAL column_std: std_LOGIC_VECTOR(9 downto 0);
 signal pixel: std_logic;
 signal row_div2 : unsigned(11 downto 0);
+signal pixel_r, pixel_g, pixel_b : std_logic_vector (3 downto 0);
 
 BEGIN
 
@@ -30,12 +31,26 @@ BEGIN
             + (shift_right(to_unsigned(column, 12), 6)));  
   
   -- Criando pixel_r , pixel_g , pixel_b para selecionar as cores 
-  pixel_r <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
-  pixel_b <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
+  -- cada um deles pode variar em intensidade podendo gerar ate 4096 cores diferentes (combinacao das 3 cores variando em 4 bits cada)
+  pixel_r(0) <= video_out(31-to_integer(unsigned(column_std(4 downto 0))));
+  pixel_g(0) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_b(0) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
   
-  VGA_R <= (others => pixel_r) when disp_ena='1' else (others => '0');
-  VGA_G <= (others => pixel_g) when disp_ena='1' else (others => '0');
+  pixel_r(1) <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
+  pixel_g(1) <= video_out(31-to_integer(unsigned(column_std(8 downto 4))));
+  pixel_b(1) <= video_out(31-to_integer(unsigned(column_std(9 downto 5))));
+  
+  pixel_r(2) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g(2) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
+  pixel_b(2) <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
+  
+  pixel_r(3) <= video_out(31-to_integer(unsigned(column_std(9 downto 5))));
+  pixel_g(3) <= video_out(31-to_integer(unsigned(column_std(4 downto 0))));
+  pixel_b(3) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
+  
+  -- intensidade nas respectivas cores
+  VGA_R <= (others => pixel_r) when disp_ena='1' else (others => '0'); 
+  VGA_G <= (others => not pixel_g) when disp_ena='1' else (others => '0');
   VGA_B <= (others => pixel_b) when disp_ena='1' else (others => '0');
   
 END behavior;
