@@ -17,12 +17,14 @@ Repositório para armazenar o trabalho final de Laboratório de Arquitetura e Or
   O projeto pode ser dividido em algumas etapas:
   
   1. Entender funcionamento do sistema de saída VGA fornecido pela placa;
-  2. Definir as especificações e funcionamento da animação(como fazer os objetos percorrerem a tela e como mudar suas cores), para implementar como o sistema de vídeo será executado;
+  2. Definir as especificações e funcionamento da animação(como fazer os objetos percorrerem a tela e como mudar suas cores), para implementar como o sistema de vídeo será executado e como será feita a interface com o programa;
   3. Criar o programa que gera a animação.
 
-  A resolução do vídeo gerado para o monitor é de 640x480, considerando um monitor com taxa de atualização vertical de 60Hz. Dessa maneira, as especificações tabeladas são as seguintes:
+  Quanto à animação, o esboço inicial seria colocar numa posição da memória um dado que possui 12 bits destinados ao controle de cores(que estaria diretamente relacionado a este pelo sinal *video_out*) e o restante relativo à posição que o objeto ocuparia na tela. 
+
+A resolução do vídeo gerado para o monitor é de 640x480, considerando um monitor com taxa de atualização vertical de 60Hz. Dessa maneira, as especificações tabeladas são as seguintes:
   
-| Resolution(pixels)  | RefreshRate(Hz) | PixelClock(MHz) | PixelClock(MHz) |Horizontal Display(pixel_clocks) | Horizontal FrontPorch(pixel_clocks) | Horizontal SyncPulse(pixel_clocks) | BackPorch(pixel_clocks) | Vertical Display(rows) | Vertical FrontPorch(rows) | Vertical SyncPulse(rows) | Vertical BackPorch(rows) | h_syncPolarity | v_syncPolarity|
+| Resolution(pixels)  | RefreshRate(Hz) | PixelClock(MHz) | Horizontal Display(pixel_clocks) | Horizontal FrontPorch(pixel_clocks) | Horizontal SyncPulse(pixel_clocks) | Horizontal BackPorch(pixel_clocks) | Vertical Display(rows) | Vertical FrontPorch(rows) | Vertical SyncPulse(rows) | Vertical BackPorch(rows) | h_syncPolarity | v_syncPolarity|
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | 640x480   | 60 | 25.175 | 640 | 16 | 96 | 48 | 480 | 10 | 2 | 33 | n | n |
 
