@@ -19,7 +19,7 @@ ARCHITECTURE behavior OF address_video IS
 SIGNAL column_std: std_LOGIC_VECTOR(9 downto 0);
 signal pixel: std_logic;
 signal row_div4 : unsigned(11 downto 0);
-signal pixel_r, pixel_g, pixel_b : std_logic_vector (3 downto 0);
+signal pixel_r, pixel_g, pixel_b : std_logic;
 
 BEGIN
 
@@ -33,25 +33,14 @@ BEGIN
 
   -- Criando pixel_r , pixel_g , pixel_b para selecionar as cores 
   -- para testar e ver as cores possiveis
-  pixel_r(0) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g(0) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_b(0) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  
-  pixel_r(1) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g(1) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_b(1) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  
-  pixel_r(2) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g(2) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_b(2) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  
-  pixel_r(3) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g(3) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_b(3) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_r <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g <= not video_out(30-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_b <= not video_out(29-to_integer(unsigned(column_std(5 downto 1))));
+
   
   -- intensidade nas respectivas cores
-  VGA_R <=  pixel_r when disp_ena='1' else (others => '0'); 
-  VGA_G <=  not pixel_g when disp_ena='1' else (others => '0');
-  VGA_B <=  pixel_b when disp_ena='1' else (others => '0');
+  VGA_R <=  (others=>pixel_r) when disp_ena='1' else (others => '0'); 
+  VGA_G <=  (others=>pixel_g) when disp_ena='1' else (others => '0');
+  VGA_B <=  (others=>pixel_b) when disp_ena='1' else (others => '0');
   
 END behavior;
