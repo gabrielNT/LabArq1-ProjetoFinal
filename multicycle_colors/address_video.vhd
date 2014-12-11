@@ -18,39 +18,40 @@ ARCHITECTURE behavior OF address_video IS
 
 SIGNAL column_std: std_LOGIC_VECTOR(9 downto 0);
 signal pixel: std_logic;
-signal row_div2 : unsigned(11 downto 0);
+signal row_div4 : unsigned(11 downto 0);
 signal pixel_r, pixel_g, pixel_b : std_logic_vector (3 downto 0);
 
 BEGIN
 
   column_std <= std_logic_vector(to_unsigned(column, 10));
-  row_div2 <= shift_right(to_unsigned(row, 12), 1);
+  row_div4 <= shift_right(to_unsigned(row, 12), 2); --divide os pixels para ficarem 4x4, um pixel representa 16
   video_address <= std_logic_vector(
-              (shift_left(row_div2, 3)) 
-            + (shift_left(row_div2, 1)) 
-            + (shift_right(to_unsigned(column, 12), 6)));  
+              (shift_left(row_div4, 3)) --10 words*2columns = 640 bits (cada word com 32 bits)
+            + (shift_left(row_div4, 1)) 
+            + (shift_right(to_unsigned(column, 12), 6)));  --divide por 64 para caber na tela
   
+
   -- Criando pixel_r , pixel_g , pixel_b para selecionar as cores 
-  -- cada um deles pode variar em intensidade podendo gerar ate 4096 cores diferentes (combinacao das 3 cores variando em 4 bits cada)
-  pixel_r(0) <= video_out(31-to_integer(unsigned(column_std(4 downto 0))));
+  -- para testar e ver as cores possiveis
+  pixel_r(0) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
   pixel_g(0) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_b(0) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
+  pixel_b(0) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
   
-  pixel_r(1) <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
-  pixel_g(1) <= video_out(31-to_integer(unsigned(column_std(8 downto 4))));
-  pixel_b(1) <= video_out(31-to_integer(unsigned(column_std(9 downto 5))));
+  pixel_r(1) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g(1) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_b(1) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
   
-  pixel_r(2) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
-  pixel_g(2) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
-  pixel_b(2) <= video_out(31-to_integer(unsigned(column_std(7 downto 3))));
+  pixel_r(2) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g(2) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_b(2) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
   
-  pixel_r(3) <= video_out(31-to_integer(unsigned(column_std(9 downto 5))));
-  pixel_g(3) <= video_out(31-to_integer(unsigned(column_std(4 downto 0))));
-  pixel_b(3) <= video_out(31-to_integer(unsigned(column_std(6 downto 2))));
+  pixel_r(3) <= video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_g(3) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
+  pixel_b(3) <= not video_out(31-to_integer(unsigned(column_std(5 downto 1))));
   
   -- intensidade nas respectivas cores
-  VGA_R <= (others => pixel_r) when disp_ena='1' else (others => '0'); 
-  VGA_G <= (others => not pixel_g) when disp_ena='1' else (others => '0');
-  VGA_B <= (others => pixel_b) when disp_ena='1' else (others => '0');
+  VGA_R <=  pixel_r when disp_ena='1' else (others => '0'); 
+  VGA_G <=  not pixel_g when disp_ena='1' else (others => '0');
+  VGA_B <=  pixel_b when disp_ena='1' else (others => '0');
   
 END behavior;
