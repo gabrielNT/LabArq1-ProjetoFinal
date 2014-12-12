@@ -17,7 +17,7 @@ entity control_unit is
 		offset: out std_logic_vector (31 downto 0);
 		jump_control: out std_logic;
 		jump_offset: out std_logic_vector(25 downto 0);
-		branch_eq, branch_nq, addi_control: out std_logic);
+		branch, bne_or_beq: out std_logic);
 end control_unit;
 
 architecture behavioral of control_unit is
@@ -29,10 +29,10 @@ architecture behavioral of control_unit is
 	constant sw: std_logic_vector (5 downto 0) := "101011";
 	constant  r: std_logic_vector (5 downto 0) := "000000";
 	constant  j: std_logic_vector (5 downto 0) := "000010";
-	constant  bne: std_logic_vector (5 downto 0) := "000101";
-	constant  beq: std_logic_vector (5 downto 0) := "000100";
-	constant  addi: std_logic_vector (5 downto 0) := "001000";
+	constant beq: std_logic_vector(5 downto 0) := "000100";
+	constant bne: std_logic_vector(5 downto 0) := "000101";
 	constant ori: std_logic_vector(5 downto 0) := "001101";
+	constant addi: std_logic_vector(5 downto 0) := "001000";
 
 	function extend_to_32(input: std_logic_vector (15 downto 0)) return std_logic_vector is 
 	variable s: signed (31 downto 0);
@@ -65,9 +65,8 @@ begin
    	mem_to_register <= '0';
 		write_memory <= '0';
 		write_register <= '0';
-		branch_eq <= '0';
-		branch_nq <= '0';
-		addi_control <= '0';
+		branch <= '0';
+		bne_or_beq <= '0';  
 
 		case next_state is
 
@@ -85,10 +84,10 @@ begin
 				alu_operation <= "010";
 
 				if opcode = lw then
-      		source_alu <= '1';
+      		  source_alu <= '1';
 					next_state <= mem;
 				elsif opcode = sw then
-      		source_alu <= '1';
+      		  source_alu <= '1';
 					next_state <= mem;
 				elsif opcode = j then
      			  jump_control <= '1';
@@ -96,19 +95,20 @@ begin
 				elsif opcode = ori then
 				  source_alu <= '1';
 				  alu_operation <= "001";
-				  next_state <= writeback;
+				  next_state <= writeback; 
+				elsif opcode = addi then		
+	        source_alu <= '1';				
+          next_state <= writeback;  
 				elsif opcode = beq then
+				  branch <= '1';
 				  alu_operation <= "011";
-     			  branch_eq <= '1';
+				  bne_or_beq <= '1';
 				  next_state <= fetch;
 				elsif opcode = bne then
+				  branch <= '1';
 				  alu_operation <= "011";
-   		   	 branch_nq <= '1';
-				  next_state <= fetch;  
-				elsif opcode = addi then
-				 source_alu <= '1';
-				 addi_control <= '1';
-				 next_state <= writeback;
+				  bne_or_beq <= '0';
+				  next_state <= fetch;
 				else --if opcode = r then
 					next_state <= writeback;
 				end if;
@@ -126,9 +126,12 @@ begin
 			when writeback =>
 				-- write regiter result
         if opcode = lw then
-   				mem_to_register <= '1';
-        elsif opcode = ori then
+   				  mem_to_register <= '1';
+ 				elsif opcode = ori then
  				  reg_dst <= '0';
+ 				elsif opcode = addi then		
+	        mem_to_register <= '0';		
+	        write_register <= '1';  
         else
 				  reg_dst <= '1';
         end if;
@@ -141,3 +144,4 @@ begin
 	end process;
 
 end behavioral;
+
