@@ -26,19 +26,20 @@ BEGIN
   column_std <= std_logic_vector(to_unsigned(column, 10));
   row_div4 <= shift_right(to_unsigned(row, 12), 2); --divide os pixels para ficarem 4x4, um pixel representa 16
   video_address <= std_logic_vector(
-              (shift_left(row_div4, 2)) --10 words*2columns = 640 bits (cada word com 32 bits)
+              (shift_left(row_div4, 2)) --5 words*4columns = 640 bits (cada word com 32 bits)
             + (shift_left(row_div4, 0)) 
-            + (shift_right(to_unsigned(column, 12), 7)));  --divide por 64 para caber na tela
+            + (shift_right(to_unsigned(column, 12), 7)));  --divide por 128 para caber na tela
 
-  -- Criando pixel_r , pixel_g , pixel_b para selecionar as cores 
-  -- para testar e ver as cores possiveis
+  -- Criando pixel_r , pixel_g , pixel_b,pixel_s para selecionar as cores 
+  -- recebendo valores de pixel_r/g/b/s da memoria 
   pixel_r <= video_out(31-to_integer(unsigned(column_std(5 downto 1)))*4);
   pixel_g <= video_out(30-to_integer(unsigned(column_std(5 downto 1)))*4);
   pixel_b <= video_out(29-to_integer(unsigned(column_std(5 downto 1)))*4);
   pixel_s <= video_out(28-to_integer(unsigned(column_std(5 downto 1)))*4);
 
   
-  -- intensidade nas respectivas cores
+  -- Intensidade nas respectivas cores , alem das 8 cores selecionadas por pixel_r/g/b o pixel_s define a intensidade dessas cores
+
   VGA_R(0) <= pixel_r when disp_ena='1' else '0'; 
   VGA_G(0) <= pixel_g when disp_ena='1' else '0';
   VGA_B(0) <= pixel_b when disp_ena='1' else '0';
