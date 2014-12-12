@@ -5,9 +5,9 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity program_counter is
 	generic (address_width: integer := 32);
 	port (
-		clock, enable, jump, branch: in std_logic;
+		clock, enable, jump, branch_control: in std_logic;
 		next_address: out std_logic_vector (address_width - 1 downto 0);
-		jump_address, branch_address: in std_logic_vector (address_width - 1 downto 0));--add branch address
+		jump_address, branch_address: in std_logic_vector (address_width - 1 downto 0));
 end program_counter;
 
 architecture behavioral of program_counter is
@@ -24,11 +24,11 @@ begin
 			if rising_edge(clock) then
 			  if jump = '1' then
 			    current_address <= jump_address;
-			  elsif branch = '1' then
-			    current_address <= branch_address;
-				elsif enable = '1' and current_address /= maximum_address then
-					current_address <= current_address + '1';
-				end if;
+			  elsif branch_control = '1' then
+				 current_address <= branch_address;
+			  elsif enable = '1' and current_address /= maximum_address then
+				 current_address <= current_address + '1';
+			  end if;
 			end if;
 		end process;
 
