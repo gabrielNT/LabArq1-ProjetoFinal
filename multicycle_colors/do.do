@@ -36,6 +36,13 @@ add wave -group mem -radix hexadecimal sim:/t_processor/the_processor/address_to
 add wave -group mem -radix hexadecimal sim:/t_processor/the_processor/data_from_memory
 add wave -group mem -radix hexadecimal sim:/t_processor/the_processor/jump_control
 
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/branch_control
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/branch_address
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/zero_flag
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/branch
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/bne_or_beq
+add wave -group branch -radix hexadecimal sim:/t_processor/the_processor/b_control_aux
+
 add wave -group writeback -radix hexadecimal sim:/t_processor/the_processor/write_register
 add wave -group writeback -radix hexadecimal sim:/t_processor/the_processor/mem_to_register
 add wave -group writeback -radix hexadecimal sim:/t_processor/the_processor/reg_dst
@@ -57,18 +64,8 @@ add wave -group video sim:/t_processor/VGA_HS_d
 add wave -group video sim:/t_processor/VGA_VS_d
 add wave -group video sim:/t_processor/disp_ena_d
 
-add wave -group relatorio9 -radix hexadecimal sim:/t_processor/the_processor/branch_eq
-add wave -group relatorio9 -radix hexadecimal sim:/t_processor/the_processor/branch_nq
-add wave -group relatorio9 -radix hexadecimal sim:/t_processor/the_processor/z_flag
-add wave -group relatorio9 -radix hexadecimal sim:/t_processor/the_processor/branch
-
-add wave -group relatorio10 -radix hexadecimal sim:/t_processor/the_processor/addi_control
-add wave -group relatorio10 -radix hexadecimal sim:/t_processor/the_processor/data_to_write_in_register
-
 configure wave -shortnames 1
 
-run 500 ns
+run 5000 ns
 
 wave zoom full
-
-WaveRestoreCursors {{addi 1} {125000 ps} 1} {{addi 2} {195000 ps} 1} {{beq nao pula} {169697 ps} 1} {{beq pula} {235000 ps} 1}

@@ -21,11 +21,23 @@ architecture behavioral of instructions_memory is
 	signal instructions: instructions_sequence :=
 	(
 		0 => X"8C080000",
-		1 => X"200a000a",
-		2 => X"20090005",
-		3 => X"ad280000",
-		4 => X"21290005",
-		5 => X"152afffd",
+		1 => X"8c09001e",
+		2 => X"8c0a003c",
+		3 => X"8c0b005a",
+		4 => X"20040005",
+		5 => X"20050023",
+		6 => X"20060041",
+		7 => X"2007005f",
+		8 => X"2002001e",
+		9 => X"ac880000",
+		10 => X"aca90000",
+		11 => X"acca0000",
+		12 => X"aceb0000",
+		13 => X"20840005",
+		14 => X"20a50005",
+		15 => X"20c60005",
+		16 => X"20e70005",
+		17 => X"1482fff7",
 		      
 		others => (others => 'U'));
 
